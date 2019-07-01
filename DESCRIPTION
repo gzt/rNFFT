@@ -1,0 +1,15 @@
+Package: rNFFT
+Title: Fast Fourier Transform at Nonequispaced Nodes
+Version: 0.0.0.9000
+Authors@R: person("Geoffrey", "Thompson", email = "gzthompson@gmail.com", role = c("aut", "cre"))
+Description: Provides a wrapper around the NFFT 3.0 C library, which implements 
+    the fast Fourier transform for non-equispaced nodes, its adjoint, and its
+    inversion. This provides functions for the NFFT and Solver routines.
+Depends: R (>= 3.6.0)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    roxygen2
+Suggests: 
+    testthat
