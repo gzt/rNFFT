@@ -1,4 +1,5 @@
 *~
+*.Rproj
 
 # History files
 .Rhistory
