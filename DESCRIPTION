@@ -8,7 +8,7 @@ Description: Provides a wrapper around the NFFT 3.0 C library, which implements
     inversion. This provides functions for the NFFT and Solver routines.
 Depends: R (>= 3.6.0)
 License: GPL-3
-SystemRequirements: fftw3 (>= 3.1.2), nfft
+SystemRequirements: fftw3 (>= 3.1.2), nfft3
 Encoding: UTF-8
 LazyData: true
 Suggests: 

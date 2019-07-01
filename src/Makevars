@@ -1,0 +1,4 @@
+PKG_CPPFLAGS= 
+PKG_LIBS= -lnfft3 -lfftw3  
+
+all: $(SHLIB)

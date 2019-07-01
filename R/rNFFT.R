@@ -13,4 +13,30 @@
 #'
 #' @docType package
 #' @name rNFFT
+#' @useDynLib rNFFT, .registration = TRUE
 NULL
+
+##' Test Function
+##'
+##' Generates Test Output
+##' @title Test Function
+##' @param M integer, number of nodes
+##' @param N integer
+##' @return Null
+##' @export
+##' @author Geoffrey Z. Thompson
+##'
+##' @examples
+##' 
+##' test(19,14)
+test <- function(M, N){
+
+ .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
+
+    
+}
+
+
+.onUnload <- function(libpath) {
+ library.dynam.unload("rNFFT", libpath)
+}
