@@ -13,8 +13,9 @@
 #include<complex.h>
 
 #define NFFT_PRECISION_DOUBLE
+#include<fftw3.h>
+#include "nfft3.h"
 
-#include "nfft3mp.h"
 
 
 #define ALLOC_VECTOR(S, D, ST, DT, C, N)                                       \
@@ -59,21 +60,54 @@ void rand_shifted_unit_double(double *x, const int n)
 
 
 void test_function(SEXP M, SEXP N){
-  NFFT(plan) p;
+  const char *error_str;
+  nfft_plan p;
   int m = asInteger(M);
   int n = asInteger(N);
 
    GetRNGstate();
-   NFFT(init_1d)(&p, n, m);
+   nfft_init_1d(&p, n, m);
    Rprintf("Got here\n");
    rand_shifted_unit_double(p.x, p.M_total);
    Rprintf("didnt' get here\n");
    for(int i = 0; i < p.M_total; i++) Rprintf("Here is %f\n",p.x[i]);
    nfft_precompute_one_psi(&p); 
-   
 
+   rand_unit_complex(p.f_hat,p.N_total);
+  
+   for(int i = 0; i < p.N_total; i++) Rprintf("Here is %f\n",crealf(p.f_hat[i]));
+
+  /** check for valid parameters before calling any trafo/adjoint method */
+  error_str = nfft_check(&p);
+  if (error_str != 0)
+  {
+    Rprintf("Error in nfft module: %s\n", error_str);
+    return;
+  }
+
+  /** direct trafo and show the result */
+  nfft_trafo_direct(&p);
+    
+  for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f\n",crealf(p.f[i]));
+
+  /** approx. trafo and show the result */
+  nfft_trafo(&p);
+  
+  for(int i = 0; i < p.M_total; i++) Rprintf("Here is nfft %f\n",crealf(p.f[i]));
+
+    /** approx. adjoint and show the result */
+  nfft_adjoint_direct(&p);
+  for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint ndft %f\n",crealf(p.f_hat[i]));
+  
+
+  /** approx. adjoint and show the result */
+  nfft_adjoint(&p);
+  for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint nfft %f\n",crealf(p.f_hat[i]));
+ 
+
+  /** finalise the one dimensional plan */
    
-   NFFT(finalize)(&p);
+  //NFFT(finalize)(&p);
    PutRNGstate();
    Rprintf("Do I get here?\n");
 }
