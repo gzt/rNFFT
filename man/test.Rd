@@ -22,7 +22,8 @@ Generates Test Output
 }
 \examples{
 
-test(19,14)
+test(19L,14L)
+
 }
 \author{
 Geoffrey Z. Thompson

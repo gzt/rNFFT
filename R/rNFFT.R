@@ -28,10 +28,10 @@ NULL
 ##'
 ##' @examples
 ##' 
-##' test(19,14)
+##' test(19L,14L)
+##' 
 test <- function(M, N){
-
- .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
+  .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
 
     
 }

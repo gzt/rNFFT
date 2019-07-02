@@ -12,5 +12,5 @@ SystemRequirements: fftw3 (>= 3.1.2), nfft3
 Encoding: UTF-8
 LazyData: true
 Suggests: 
-    testthat
+    testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
