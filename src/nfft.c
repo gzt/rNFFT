@@ -58,14 +58,14 @@ void rand_shifted_unit_double(double *x, const int n)
 
 
 
-void test_function(SEXP M, SEXP N){
+SEXP test_function(SEXP M, SEXP N){
   NFFT(plan) p;
   int m = asInteger(M);
   int n = asInteger(N);
 
    GetRNGstate();
    NFFT(init_1d)(&p, n, m);
-   Rprintf("Got here\n");
+    Rprintf("Got here\n");
    rand_shifted_unit_double(p.x, p.M_total);
    Rprintf("didnt' get here\n");
    for(int i = 0; i < p.M_total; i++) Rprintf("Here is %f\n",p.x[i]);
@@ -73,8 +73,9 @@ void test_function(SEXP M, SEXP N){
    
 
    
-   NFFT(finalize)(&p);
+   //  NFFT(finalize)(&p);
    PutRNGstate();
    Rprintf("Do I get here?\n");
+   return R_NilValue;
 }
 
