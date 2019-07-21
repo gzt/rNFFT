@@ -33,7 +33,7 @@ NULL
 test <- function(M, N){
   .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
 
-    
+  return(TRUE)    
 }
 
 

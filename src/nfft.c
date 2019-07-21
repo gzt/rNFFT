@@ -14,7 +14,7 @@
 
 #define NFFT_PRECISION_DOUBLE
 #include<fftw3.h>
-#include "nfft3.h"
+#include "nfft3mp.h"
 
 
 
@@ -75,38 +75,43 @@ SEXP test_function(SEXP M, SEXP N){
    rand_unit_complex(p.f_hat,p.N_total);
   
    for(int i = 0; i < p.N_total; i++) Rprintf("Here is %f\n",crealf(p.f_hat[i]));
+    Rprintf("Got here\n");
 
   /** check for valid parameters before calling any trafo/adjoint method */
-  error_str = nfft_check(&p);
-  if (error_str != 0)
-  {
-    Rprintf("Error in nfft module: %s\n", error_str);
-    return;
-  }
+  /* error_str = nfft_check(&p); */
+  /* if (error_str != 0) */
+  /* { */
+  /*   Rprintf("Error in nfft module,\n"); */
+  /*   return; */
+  /* } */
 
   /** direct trafo and show the result */
   nfft_trafo_direct(&p);
     
   for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f\n",crealf(p.f[i]));
+    Rprintf("Got here\n");
 
   /** approx. trafo and show the result */
   nfft_trafo(&p);
   
   for(int i = 0; i < p.M_total; i++) Rprintf("Here is nfft %f\n",crealf(p.f[i]));
+    Rprintf("Got here\n");
 
     /** approx. adjoint and show the result */
   nfft_adjoint_direct(&p);
   for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint ndft %f\n",crealf(p.f_hat[i]));
-  
+      Rprintf("Got here\n");
+
 
   /** approx. adjoint and show the result */
   nfft_adjoint(&p);
   for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint nfft %f\n",crealf(p.f_hat[i]));
- 
+     Rprintf("Got here\n");
+
 
   /** finalise the one dimensional plan */
    
-   //  NFFT(finalize)(&p);
+    NFFT(finalize)(&p);
    PutRNGstate();
    Rprintf("Do I get here?\n");
    return R_NilValue;

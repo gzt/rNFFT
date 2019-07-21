@@ -1,3 +1,3 @@
 test_that("test", {
-  expect_error(test(14,18))
+  expect_true(test(14,19))
 })
