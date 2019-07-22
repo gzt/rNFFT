@@ -18,7 +18,7 @@ NULL
 
 ##' Test Function
 ##'
-##' Generates Test Output
+##' Generates Test Output. Compare the output the results
 ##'
 ##' @title Test Function
 ##' @param M integer, number of nodes
@@ -49,15 +49,19 @@ test_nfft<- function(M, N){
 ##' The NFFT functions use the FFT to compute this, which should be faster.
 ##' The adjoint, in this case, is not the same as the inverse. Solving the
 ##' inverse problem requires approximations. Here we present the 1D NDFT,
-##' NFFT, and their adjoints. You must likely want to use the \code{nfft_1d}
-##' and \code{nfft_adjoint_1d} functions.
+##' NFFT, and their adjoints. You most likely want to use the \code{nfft_1d}
+##' and \code{nfft_adjoint_1d} functions rather than the \code{dft} functions.
 ##'
 ##' 
-##' @title 1-D NDFT
+##' @title 1-D NFFT
 ##' @param x (real) vector of nodes of length \code{M}, must be in \code{[-0.5,0.5)}.
 ##' @param f_hat (complex) vector of \eqn{\hat{f}}{f_hat} entries -
 ##'     must be shorter than \code{x} (of length \code{N}) and length must be even.
 ##' @return vector of \eqn{f}, the results of the transform (of length \code{M}).
+##'
+##' @references Keiner, J., Kunis, S., and Potts, D. ''Using NFFT 3 - a software
+##'     library for various nonequispaced fast Fourier transforms'' ACM Trans.
+##'     Math. Software,36, Article 19, 1-30, 2009.
 ##' @author Geoffrey Z. Thompson
 ##' @export
 ##' @examples
