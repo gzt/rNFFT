@@ -14,7 +14,9 @@
 
 #define NFFT_PRECISION_DOUBLE
 #include<fftw3.h>
-#include "nfft3mp.h"
+#include<nfft3.h>
+#include<nfft3mp.h>
+
 
 
 
@@ -105,7 +107,7 @@ SEXP test_function(SEXP M, SEXP N){
 
   /** finalise the one dimensional plan */
    
-    NFFT(finalize)(&p);
+   NFFT(finalize)(&p);
    PutRNGstate();
    Rprintf("Finish the program. \n");
    return R_NilValue;
