@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/gzt/rNFFT.svg?branch=master)](https://travis-ci.org/gzt/rNFFT)
+
 # rNFFT
 Writing an R wrapper for the NFFT library (nonequispaced nodes Fast Fourier Transform)
 

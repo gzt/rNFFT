@@ -63,57 +63,51 @@ SEXP test_function(SEXP M, SEXP N){
   NFFT(plan) p;
   int m = asInteger(M);
   int n = asInteger(N);
-
+  const char *error_str;
    GetRNGstate();
    NFFT(init_1d)(&p, n, m);
-    Rprintf("Got here\n");
+    Rprintf("Initialized. \n");
    rand_shifted_unit_double(p.x, p.M_total);
-   Rprintf("didnt' get here\n");
-   for(int i = 0; i < p.M_total; i++) Rprintf("Here is %f\n",p.x[i]);
+   Rprintf("Nodes generated. \n");
+   for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
    nfft_precompute_one_psi(&p); 
 
    rand_unit_complex(p.f_hat,p.N_total);
   
-   for(int i = 0; i < p.N_total; i++) Rprintf("Here is %f\n",crealf(p.f_hat[i]));
-    Rprintf("Got here\n");
-
+   for(int i = 0; i < p.N_total; i++) Rprintf("Here the real part of f_hat: %f\n",crealf(p.f_hat[i]));
+   
   /** check for valid parameters before calling any trafo/adjoint method */
-  /* error_str = nfft_check(&p); */
-  /* if (error_str != 0) */
-  /* { */
-  /*   Rprintf("Error in nfft module,\n"); */
-  /*   return; */
-  /* } */
+  error_str = nfft_check(&p);
+  if (error_str != 0)
+  {
+    Rprintf("Error in nfft module,\n");
+    return R_NilValue;
+  }
 
   /** direct trafo and show the result */
   nfft_trafo_direct(&p);
     
   for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f\n",crealf(p.f[i]));
-    Rprintf("Got here\n");
-
+ 
   /** approx. trafo and show the result */
   nfft_trafo(&p);
   
   for(int i = 0; i < p.M_total; i++) Rprintf("Here is nfft %f\n",crealf(p.f[i]));
-    Rprintf("Got here\n");
-
+ 
     /** approx. adjoint and show the result */
   nfft_adjoint_direct(&p);
   for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint ndft %f\n",crealf(p.f_hat[i]));
-      Rprintf("Got here\n");
-
-
+ 
   /** approx. adjoint and show the result */
   nfft_adjoint(&p);
   for(int i = 0; i < p.N_total; i++) Rprintf("Here is adjoint nfft %f\n",crealf(p.f_hat[i]));
-     Rprintf("Got here\n");
-
+ 
 
   /** finalise the one dimensional plan */
    
     NFFT(finalize)(&p);
    PutRNGstate();
-   Rprintf("Do I get here?\n");
+   Rprintf("Finish the program. \n");
    return R_NilValue;
 }
 
