@@ -4,6 +4,7 @@ language: R
 sudo: true
 before_install:
   - sudo apt-get install -y libfftw3-3 libfftw3-dev libnfft3-2 libnfft3-2 libnfft3-dev
+  - autoconf
 r_packages:
   - covr
   - fftw
