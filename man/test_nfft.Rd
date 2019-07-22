@@ -2,14 +2,19 @@
 % Please edit documentation in R/rNFFT.R
 \name{test_nfft}
 \alias{test_nfft}
+\alias{test_solve}
 \title{Test Function}
 \usage{
 test_nfft(M, N)
+
+test_solve(M, N, iterations)
 }
 \arguments{
 \item{M}{integer, number of nodes}
 
 \item{N}{integer, number of frequences (even, less than \code{M}).}
+
+\item{iterations}{Number of iterations (for solver)}
 }
 \value{
 TRUE
@@ -20,10 +25,15 @@ Test Function
 \details{
 Generates Test Output. Compare the output the results
 }
+\section{Functions}{
+\itemize{
+\item \code{test_solve}: Test solver: displays the 1D solver.
+}}
+
 \examples{
 set.seed(20190722)
 test_nfft(19L,14L)
-
+test_solve(8L,16L,9L)
 }
 \author{
 Geoffrey Z. Thompson

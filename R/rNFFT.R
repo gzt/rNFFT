@@ -24,6 +24,7 @@ NULL
 ##' @param M integer, number of nodes
 ##' @param N integer, number of frequences (even, less than \code{M}).
 ##' 
+##' 
 ##' @return TRUE
 ##' @export
 ##' @author Geoffrey Z. Thompson
@@ -31,7 +32,7 @@ NULL
 ##' @examples
 ##' set.seed(20190722)
 ##' test_nfft(19L,14L)
-##' 
+##' test_solve(8L,16L,9L)
 test_nfft<- function(M, N){
     
   .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
@@ -39,6 +40,13 @@ test_nfft<- function(M, N){
   return(TRUE)    
 }
 
+##' @export
+##' @describeIn test_nfft Test solver: displays the 1D solver.
+##' @param iterations Number of iterations (for solver)
+test_solve <- function(M, N, iterations){
+    .Call("solvetest", as.integer(M), as.integer(N), as.integer(iterations), PACKAGE = "rNFFT")
+    return(TRUE)
+}
 
 ##' 1-D Non-Uniform Direct Fourier Tranform
 ##'
@@ -145,4 +153,37 @@ ndft_adjoint_1d <- function(x, f, N){
  library.dynam.unload("rNFFT", libpath)
 }
 
-
+##' 1-D NFFT solver
+##'
+##' Unlike in the case of the equispaced Fourier transform, the adjoint is NOT
+##' the inverse of the non-equispaced Fourier transform. The solution must be found
+##' numerically. 
+##' @title Inverse of the 1-D NFFT.
+##' @param x input vector (real, length \code{M})
+##' @param f Outputted Fourier coefficients (complex, length \code{M})
+##' @param N Number of coefficients for the inverse.
+##' @param eps convergence criterion
+##' @param iterations number of iterations for solve to run (at most)
+##' @return vector of length \code{N} of solutions \eqn{\hat{f}}{f_hat}.
+##' @export
+##' @examples
+##' set.seed(20190722)
+##' x = runif(8) - 0.5
+##' f = 1:8
+##' for(i in 1:8) f[i] = runif(1)*1i + runif(1)
+##' x
+##' f
+##' nfft_solver_1d(x,f,16,1e-35,8)
+##' 
+##' @author Geoffrey Z. Thompson
+nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
+    M = length(x)
+    if(length(f) != length(x)) stop("f must have the same length as x")
+    if(N%%2 != 0) stop("Must have an even number of frequencies")
+    
+    if(M > N) stop("length of f_hat must be greater than length of X")
+    
+    fhat = .Call("rnfft_solver_1d", x, as.complex(f), as.integer(M), as.integer(N), eps, as.integer(iterations), PACKAGE="rNFFT")
+    return(fhat)
+    
+}

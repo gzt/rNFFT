@@ -354,3 +354,207 @@ SEXP rndft_adjoint_1d(SEXP X, SEXP F, SEXP M, SEXP N){
   return FHAT;
       
 }
+
+
+
+
+SEXP solvetest(SEXP m, SEXP n, SEXP iterations){
+  int iter = asInteger(iterations);
+  int M = asInteger(m);
+  int N = asInteger(n);
+ 
+ int k, l; /**< index for nodes, freqencies,iter*/
+  NFFT(plan) p; /**< plan for the nfft               */
+  SOLVER(plan_complex) ip; /**< plan for the inverse nfft       */
+  const char *error_str;
+
+  /** initialise an one dimensional plan */
+  NFFT(init_1d)(&p, N, M);
+ GetRNGstate();
+  /** init pseudo random nodes */
+  rand_shifted_unit_double(p.x, p.M_total);
+
+  /** precompute psi, the entries of the matrix B */
+  
+    NFFT(precompute_one_psi)(&p);
+
+  /** initialise inverse plan */
+  SOLVER(init_complex)(&ip, (NFFT(mv_plan_complex)*) (&p));
+
+  /** init pseudo random samples and show them */
+  rand_unit_complex(ip.y, p.M_total);
+  /* NFFT(vpr_complex)(ip.y, p.M_total, "Given data, vector y"); */
+ PutRNGstate();
+  for(int i = 0; i < p.M_total; i++) Rprintf("Here is data vector y: %f + %f i\n",crealf(ip.y[i]), cimagf(ip.y[i]));
+
+  
+  /** initialise some guess f_hat_0 and solve */
+  for (k = 0; k < p.N_total; k++)
+    ip.f_hat_iter[k] = NFFT_K(0.0);
+
+  /* NFFT(vpr_complex)(ip.f_hat_iter, p.N_total,      "Initial guess, vector f_hat_iter"); */
+  
+  for(int i = 0; i < p.N_total; i++) Rprintf("Initial guess: %f + %f i\n",
+					     crealf(ip.f_hat_iter[i]), cimagf(ip.f_hat_iter[i]));
+
+  /** check for valid parameters before calling any trafo/adjoint method */
+  error_str = NFFT(check)(&p);
+  if (error_str != 0)
+  {
+    printf("Error in nfft module: %s\n", error_str);
+    return R_NilValue;
+  }
+
+  NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+  NFFT(trafo)(&p);
+  /* NFFT(vpr_complex)(p.f, p.M_total, "Data fit, vector f"); */
+  for(int i = 0; i < p.M_total; i++) Rprintf("Initial guess: %f + %f i\n",
+					     crealf(p.f[i]), cimagf(p.f[i]));
+
+  NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+
+  SOLVER(before_loop_complex)(&ip);
+  printf("\n Residual r=%" NFFT__FES__ "\n", ip.dot_r_iter);
+
+  for (l = 0; l < iter; l++)
+  {
+    printf("\n********** Iteration l=%d **********\n", l);
+    SOLVER(loop_one_step_complex)(&ip);
+    /* NFFT(vpr_complex)(ip.f_hat_iter, p.N_total, */
+    /*     "Approximate solution, vector f_hat_iter"); */
+  for(int i = 0; i < p.N_total; i++) Rprintf("Approx solution: %f + %f i\n",
+					     crealf(ip.f_hat_iter[i]), cimagf(ip.f_hat_iter[i]));
+    NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+    NFFT(trafo)(&p);
+    /* NFFT(vpr_complex)(p.f, p.M_total, "Data fit, vector f"); */
+     for(int i = 0; i < p.M_total; i++) Rprintf("Data fit, vector f: %f + %f i\n",
+					     crealf(p.f[i]), cimagf(p.f[i]));
+    NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+
+    printf("\n Residual r=%"  NFFT__FES__ "\n", ip.dot_r_iter);
+  }
+
+  SOLVER(finalize_complex)(&ip);
+  NFFT(finalize)(&p);
+ 
+  Rprintf("Finish the program. \n");
+  return R_NilValue;
+}
+
+
+SEXP rnfft_solver_1d(SEXP X, SEXP Y, SEXP M, SEXP N, SEXP eps, SEXP iterations){
+  /* Y must be length M  */
+  NFFT(plan) p;
+  SOLVER(plan_complex) ip; /**< plan for the inverse nfft       */
+  int k, l;
+  int m = asInteger(M);
+  int n = asInteger(N);
+  int iter = asInteger(iterations);
+  double epsilon = REAL(eps)[0];
+  const char *error_str;
+  
+  NFFT(init_1d)(&p, n, m);
+  
+  int i = 0;
+  if (CPLXSXP == TYPEOF(X)) {
+    Rcomplex *xx = COMPLEX(X);
+    for (i = 0; i < m; ++i) {
+      p.x[i] = xx[i].r + I*xx[i].i;
+    }
+  } else if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (i = 0; i < m; ++i) {
+      p.x[i] = xx[i] + I*0;
+    }
+  } else {
+    Rf_error("'X' must be real or complex.");
+  }
+
+
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
+  nfft_precompute_one_psi(&p);
+  /** initialise inverse plan */
+  SOLVER(init_complex)(&ip, (NFFT(mv_plan_complex)*) (&p));
+
+  
+  
+  if (CPLXSXP == TYPEOF(Y)) {
+    Rcomplex *yy = COMPLEX(Y);
+    for (i = 0; i < p.M_total; ++i) {
+      ip.y[i] = yy[i].r + I*yy[i].i;
+    }
+  } else if (REALSXP == TYPEOF(Y)) {
+    double *yy = REAL(X);
+    for (int i = 0; i <  p.M_total; ++i) {
+      ip.y[i] = yy[i] + I*0;
+    }
+  } else {
+    error("'Y' must be real or complex.");
+  }
+  /** init pseudo random samples and show them */
+  /* rand_unit_complex(ip.y, p.M_total); */
+  /* NFFT(vpr_complex)(ip.y, p.M_total, "Given data, vector y"); */
+  
+  /** initialise some guess f_hat_0 and solve */
+  for (k = 0; k < p.N_total; k++)
+    ip.f_hat_iter[k] = NFFT_K(0.0);
+
+  /* NFFT(vpr_complex)(ip.f_hat_iter, p.N_total,      "Initial guess, vector f_hat_iter"); */
+  
+  /* for(int i = 0; i < p.N_total; i++) Rprintf("Initial guess: %f + %f i\n", */
+  /* 					     crealf(ip.f_hat_iter[i]), cimagf(ip.f_hat_iter[i])); */
+
+  /** check for valid parameters before calling any trafo/adjoint method */
+  error_str = NFFT(check)(&p);
+  if (error_str != 0)
+  {
+    printf("Error in nfft module: %s\n", error_str);
+    return R_NilValue;
+  }
+
+  NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+  NFFT(trafo)(&p);
+  /* NFFT(vpr_complex)(p.f, p.M_total, "Data fit, vector f"); */
+  /* for(int i = 0; i < p.M_total; i++) Rprintf("Initial guess: %f + %f i\n", */
+  /* 					     crealf(p.f[i]), cimagf(p.f[i])); */
+  
+  NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+  
+  SOLVER(before_loop_complex)(&ip);
+  /* printf("\n Residual r=%" NFFT__FES__ "\n", ip.dot_r_iter); */
+
+  for (l = 0; ip.dot_r_iter > epsilon && l < iter; l++)
+    {
+    /* printf("\n********** Iteration l=%d **********\n", l); */
+    SOLVER(loop_one_step_complex)(&ip);
+    /* NFFT(vpr_complex)(ip.f_hat_iter, p.N_total, */
+    /*     "Approximate solution, vector f_hat_iter"); */
+    /* for(int i = 0; i < p.N_total; i++) Rprintf("Approx solution: %f + %f i\n", */
+    /* crealf(ip.f_hat_iter[i]), cimagf(ip.f_hat_iter[i])); */
+    NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+    NFFT(trafo)(&p);
+    /* NFFT(vpr_complex)(p.f, p.M_total, "Data fit, vector f"); */
+    /* for(int i = 0; i < p.M_total; i++) Rprintf("Data fit, vector f: %f + %f i\n", */
+    /* crealf(p.f[i]), cimagf(p.f[i])); */
+    NFFT_CSWAP(ip.f_hat_iter, p.f_hat);
+    
+    /* printf("\n Residual r=%"  NFFT__FES__ "\n", ip.dot_r_iter); */
+  }
+  
+  
+  
+  ALLOC_COMPLEX_VECTOR(FHAT, ret, p.N_total);
+  for (i = 0; i < n; ++i) {
+    ret[i].r = creal(ip.f_hat_iter[i]);
+    ret[i].i = cimag(ip.f_hat_iter[i]);
+  }
+  
+  SOLVER(finalize_complex)(&ip);
+  NFFT(finalize)(&p);
+  UNPROTECT(1); /* s_ret */
+  return FHAT;
+  
+}
+
+
+
