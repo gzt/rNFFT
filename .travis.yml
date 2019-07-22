@@ -1,11 +1,9 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-apt_packages:
-  - libfftw3
-  - libfftw3-dev
-  - libnfft3
-  - libnfft3-dev
+sudo: true
+before_install:
+  - sudo apt-get install -y libfftw3 libfftw3-dev libnfft3 libnfft3-dev
 r_packages:
   - covr
   - fftw
