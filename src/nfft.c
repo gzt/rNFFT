@@ -163,7 +163,7 @@ SEXP rnfft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
   NFFT(trafo)(&p);
 
   //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
-
+  
   ALLOC_COMPLEX_VECTOR(F, ret, p.M_total);
   for (i = 0; i < p.M_total; ++i) {
     ret[i].r = creal(p.f[i]);

@@ -191,6 +191,45 @@ nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
     
 }
 
+#' @export
+nfft_radon <- function(image, Theta = 181, Rho = 2*round(sqrt(sum((dim(image))^2))/2)+1, fn = "polar"){
+   ## image must be N x N or a vector NxN
+    dims = dim(image)
+    if(length(dims) != 2) stop("Not a 2D image")
+    
+    N = dims[1]
+  
+
+    if(dims[1] != dims[2]) stop("Image not square.")
+
+    fntag = ifelse(fn == "polar", 1, 0)
+    
+
+    ret_matrix = .Call("c_radon", c(image), as.integer(fntag), as.integer(N), as.integer(Theta), as.integer(Rho))
+
+    matrix(ret_matrix, Rho, Theta, byrow = TRUE)
+    
+}
+
+
+#' @export
+nfft_inv_radon <- function(image, N, iter = 10, fn = "polar"){
+   ## image must be N x N or a vector NxN
+    dims = dim(image)
+    if(length(dims) != 2) stop("Not a 2D image")
+    
+    Rho = dims[1]
+    Theta = dims[2]
+
+    fntag = ifelse(fn == "polar", 1, 0)
+    
+
+    ret_matrix = .Call("c_inv_radon", c(t(image)), as.integer(fntag), as.integer(N), as.integer(Theta), as.integer(Rho), as.integer(iter))
+
+    matrix(ret_matrix, N, N, byrow = TRUE)
+    
+}
+
 
 .onUnload <- function(libpath) {
  library.dynam.unload("rNFFT", libpath)

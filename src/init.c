@@ -19,6 +19,9 @@ extern SEXP rnfct_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP rnfct_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP rnfst_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP rnfst_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
+extern SEXP c_radon(SEXP , SEXP  , SEXP , SEXP , SEXP);
+extern SEXP c_inv_radon(SEXP , SEXP  , SEXP , SEXP , SEXP, SEXP);
+
 
 static const R_CallMethodDef CallEntries[] = {
     {"test_function", (DL_FUNC) &test_function, 2},
@@ -32,6 +35,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"rnfct_adjoint_1d", (DL_FUNC) &rnfct_adjoint_1d, 4},
     {"rnfst_1d", (DL_FUNC) &rnfst_1d, 4},
     {"rnfst_adjoint_1d", (DL_FUNC) &rnfst_adjoint_1d, 4},
+    {"c_radon", (DL_FUNC) &c_radon, 5},
+    {"c_inv_radon", (DL_FUNC) &c_radon, 6},
     {NULL, NULL, 0}
 };
 
