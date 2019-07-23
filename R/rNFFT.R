@@ -191,7 +191,12 @@ nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
     
 }
 
+#' Radon transform using NFFT
 #' @export
+#' @param image square image
+#' @param Theta Number of theta slices
+#' @param Rho Number of rho slices
+#' @param fn Whether to use polar or linotype (polar by default)
 nfft_radon <- function(image, Theta = 181, Rho = 2*round(sqrt(sum((dim(image))^2))/2)+1, fn = "polar"){
    ## image must be N x N or a vector NxN
     dims = dim(image)
@@ -211,7 +216,9 @@ nfft_radon <- function(image, Theta = 181, Rho = 2*round(sqrt(sum((dim(image))^2
     
 }
 
-
+#' @describeIn nfft_radon Inverse Radon Transform using NFFT
+#' @param N size of image
+#' @param iter number of iterations for inverse
 #' @export
 nfft_inv_radon <- function(image, N, iter = 10, fn = "polar"){
    ## image must be N x N or a vector NxN
@@ -226,7 +233,7 @@ nfft_inv_radon <- function(image, N, iter = 10, fn = "polar"){
 
     ret_matrix = .Call("c_inv_radon", c(t(image)), as.integer(fntag), as.integer(N), as.integer(Theta), as.integer(Rho), as.integer(iter))
 
-    matrix(ret_matrix, N, N, byrow = TRUE)
+    ret_matrix
     
 }
 
