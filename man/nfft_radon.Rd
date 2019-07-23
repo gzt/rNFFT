@@ -31,3 +31,9 @@ Radon transform using NFFT
 \item \code{nfft_inv_radon}: Inverse Radon Transform using NFFT
 }}
 
+\examples{
+P <- PET::phantom()
+
+P_radon <- nfft_radon(P)
+P_inv <- nfft_inv_radon(P_radon, N = 257, iter = 40)
+}

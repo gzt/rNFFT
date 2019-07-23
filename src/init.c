@@ -36,7 +36,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rnfst_1d", (DL_FUNC) &rnfst_1d, 4},
     {"rnfst_adjoint_1d", (DL_FUNC) &rnfst_adjoint_1d, 4},
     {"c_radon", (DL_FUNC) &c_radon, 5},
-    {"c_inv_radon", (DL_FUNC) &c_radon, 6},
+    {"c_inv_radon", (DL_FUNC) &c_inv_radon, 6},
     {NULL, NULL, 0}
 };
 

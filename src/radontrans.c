@@ -242,7 +242,7 @@ static int Radon_trafo(int (*gridfcn)(), int T, int S, NFFT_R *f, int NN, NFFT_R
 
 SEXP c_radon(SEXP img, SEXP fntag, SEXP n, SEXP t, SEXP R){
   int (*gridfcn)(); /**< grid generating function        */
-  int i;
+  R_xlen_t i;
   int T = asInteger(t);
   int S = asInteger(R); /**< number of directions/offsets    */
   /* FILE *fp; */
@@ -256,7 +256,7 @@ SEXP c_radon(SEXP img, SEXP fntag, SEXP n, SEXP t, SEXP R){
   Rf = (NFFT_R *) NFFT(malloc)((size_t)(T * S) * (sizeof(NFFT_R)));
 
   double *xx = REAL(img);
-  for(i = 0; i < (N*N); i++)
+  for(i = 0; i < (R_xlen_t) (N*N); i++)
     f[i] = xx[i];
 	
   /** Radon transform */
@@ -266,8 +266,8 @@ SEXP c_radon(SEXP img, SEXP fntag, SEXP n, SEXP t, SEXP R){
 
   /** free the variables */
 
-  ALLOC_REAL_VECTOR(F, ret, T*S);
-  for (i = 0; i < T*S; ++i) {
+  ALLOC_REAL_VECTOR(F, ret, (R_xlen_t) (T*S));
+  for (i = 0; i < (R_xlen_t) (T*S) ; ++i) {
     ret[i] = Rf[i];
   }
   
@@ -430,8 +430,8 @@ SEXP c_inv_radon(SEXP img, SEXP fntag, SEXP n, SEXP t, SEXP r, SEXP iterations){
 
   inverse_radon_trafo(gridfcn, T, S, Rf, N, iRf, max_i);
 
-  ALLOC_REAL_VECTOR(F, ret, N*N);
-  for (i = 0; i < N*N; ++i) {
+  ALLOC_REAL_VECTOR(F, ret, (N*N));
+  for (i = 0; i <  (N*N); ++i) {
     ret[i] = iRf[i];
   }
 
