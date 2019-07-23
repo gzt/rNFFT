@@ -64,7 +64,7 @@ test_solve <- function(M, N, iterations){
 ##' @title 1-D NFFT
 ##' @param x (real) vector of nodes of length \code{M}, must be in \code{[-0.5,0.5)}.
 ##' @param f_hat (complex) vector of \eqn{\hat{f}}{f_hat} entries -
-##'     must be shorter than \code{x} (of length \code{N}) and length must be even.
+##'     (of length \code{N}) and length must be even.
 ##' @return vector of \eqn{f}, the results of the transform (of length \code{M}).
 ##'
 ##' @references Keiner, J., Kunis, S., and Potts, D. ''Using NFFT 3 - a software
@@ -96,10 +96,6 @@ ndft_1d <- function(x, f_hat){
     return(f)
 }
 
-
-
-
-
 ##' 1-D Non-Uniform Fast Fourier Tranform
 ##' @describeIn ndft_1d
 ##' 
@@ -109,11 +105,13 @@ nfft_1d <- function(x, f_hat){
     N = length(f_hat)
     if(N%%2 != 0) stop("Must have an even number of frequencies")
     
-    if(M < N) stop("length of X must be greater than length of f_hat")
+    #if(M < N) stop("length of X must be greater than length of f_hat")
     
     f = .Call("rnfft_1d", x, as.complex(f_hat), as.integer(M), as.integer(N), PACKAGE="rNFFT")
     return(f)
 }
+
+
 
 
 ##' 1-D Non-Uniform Fast Fourier Tranform (Adjoint)
@@ -127,11 +125,14 @@ nfft_adjoint_1d <- function(x, f, N){
     if(length(f) != length(x)) stop("f must have the same length as x")
     if(N%%2 != 0) stop("Must have an even number of frequencies")
     
-    if(M < N) stop("length of X must be greater than length of f_hat")
+    #if(M < N) stop("length of X must be greater than length of f_hat")
     
     fhat = .Call("rnfft_adjoint_1d", x, as.complex(f), as.integer(M), as.integer(N), PACKAGE="rNFFT")
     return(fhat)
 }
+
+
+
 
 
 ##' 1-D Non-Uniform Direct Fourier Tranform
@@ -149,9 +150,11 @@ ndft_adjoint_1d <- function(x, f, N){
     return(fhat)
 }
 
-.onUnload <- function(libpath) {
- library.dynam.unload("rNFFT", libpath)
-}
+
+
+
+
+
 
 ##' 1-D NFFT solver
 ##'
@@ -161,7 +164,7 @@ ndft_adjoint_1d <- function(x, f, N){
 ##' @title Inverse of the 1-D NFFT.
 ##' @param x input vector (real, length \code{M})
 ##' @param f Outputted Fourier coefficients (complex, length \code{M})
-##' @param N Number of coefficients for the inverse.
+##' @param N Number of coefficients for the inverse - must be even.
 ##' @param eps convergence criterion
 ##' @param iterations number of iterations for solve to run (at most)
 ##' @return vector of length \code{N} of solutions \eqn{\hat{f}}{f_hat}.
@@ -174,16 +177,21 @@ ndft_adjoint_1d <- function(x, f, N){
 ##' x
 ##' f
 ##' nfft_solver_1d(x,f,16,1e-35,8)
-##' 
+##' nfft_1d(x, nfft_solver_1d(x,f,16,eps = 1e-35))
 ##' @author Geoffrey Z. Thompson
 nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
     M = length(x)
     if(length(f) != length(x)) stop("f must have the same length as x")
     if(N%%2 != 0) stop("Must have an even number of frequencies")
     
-    if(M > N) stop("length of f_hat must be greater than length of X")
+    #if(M > N) stop("length of f_hat must be greater than length of X")
     
     fhat = .Call("rnfft_solver_1d", x, as.complex(f), as.integer(M), as.integer(N), eps, as.integer(iterations), PACKAGE="rNFFT")
     return(fhat)
     
+}
+
+
+.onUnload <- function(libpath) {
+ library.dynam.unload("rNFFT", libpath)
 }

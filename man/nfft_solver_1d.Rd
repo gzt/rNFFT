@@ -11,7 +11,7 @@ nfft_solver_1d(x, f, N, eps = 1e-12, iterations = 10)
 
 \item{f}{Outputted Fourier coefficients (complex, length \code{M})}
 
-\item{N}{Number of coefficients for the inverse.}
+\item{N}{Number of coefficients for the inverse - must be even.}
 
 \item{eps}{convergence criterion}
 
@@ -36,7 +36,7 @@ for(i in 1:8) f[i] = runif(1)*1i + runif(1)
 x
 f
 nfft_solver_1d(x,f,16,1e-35,8)
-
+nfft_1d(x, nfft_solver_1d(x,f,16,eps = 1e-35))
 }
 \author{
 Geoffrey Z. Thompson

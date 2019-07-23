@@ -19,7 +19,7 @@ ndft_adjoint_1d(x, f, N)
 \item{x}{(real) vector of nodes of length \code{M}, must be in \code{[-0.5,0.5)}.}
 
 \item{f_hat}{(complex) vector of \eqn{\hat{f}}{f_hat} entries -
-must be shorter than \code{x} (of length \code{N}) and length must be even.}
+(of length \code{N}) and length must be even.}
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 

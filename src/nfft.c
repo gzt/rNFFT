@@ -67,7 +67,6 @@ SEXP rndft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
   int m = asInteger(M);
   int n = asInteger(N);
   const char *error_str;
-  GetRNGstate();
   NFFT(init_1d)(&p, n, m);
   
   int i = 0;
@@ -126,7 +125,6 @@ SEXP rnfft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
   int m = asInteger(M);
   int n = asInteger(N);
   const char *error_str;
-  GetRNGstate();
   NFFT(init_1d)(&p, n, m);
   
   int i = 0;
@@ -137,7 +135,7 @@ SEXP rnfft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
     }
   } else if (REALSXP == TYPEOF(X)) {
     double *xx = REAL(X);
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < p.M_total; ++i) {
       p.x[i] = xx[i] + I*0;
     }
   } else {
@@ -148,7 +146,7 @@ SEXP rnfft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
 
 
   Rcomplex *ffhat = COMPLEX(FHAT);
-  for(j = 0; j < n; j++){
+  for(j = 0; j < p.N_total; j++){
     p.f_hat[j] = ffhat[j].r + I*ffhat[j].i;
   }
   //for(int i = 0; i < p.N_total; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i]));
@@ -166,8 +164,8 @@ SEXP rnfft_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
 
   //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
 
-  ALLOC_COMPLEX_VECTOR(F, ret, m);
-  for (i = 0; i < m; ++i) {
+  ALLOC_COMPLEX_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
     ret[i].r = creal(p.f[i]);
     ret[i].i = cimag(p.f[i]);
   }
@@ -242,7 +240,6 @@ SEXP rnfft_adjoint_1d(SEXP X, SEXP F, SEXP M, SEXP N){
   int m = asInteger(M);
   int n = asInteger(N);
   const char *error_str;
-  GetRNGstate();
   NFFT(init_1d)(&p, n, m);
   
   int i = 0;
@@ -303,7 +300,6 @@ SEXP rndft_adjoint_1d(SEXP X, SEXP F, SEXP M, SEXP N){
   int m = asInteger(M);
   int n = asInteger(N);
   const char *error_str;
-  GetRNGstate();
   NFFT(init_1d)(&p, n, m);
   
   int i = 0;
@@ -384,7 +380,7 @@ SEXP solvetest(SEXP m, SEXP n, SEXP iterations){
   /** init pseudo random samples and show them */
   rand_unit_complex(ip.y, p.M_total);
   /* NFFT(vpr_complex)(ip.y, p.M_total, "Given data, vector y"); */
- PutRNGstate();
+  PutRNGstate();
   for(int i = 0; i < p.M_total; i++) Rprintf("Here is data vector y: %f + %f i\n",crealf(ip.y[i]), cimagf(ip.y[i]));
 
   
@@ -557,4 +553,220 @@ SEXP rnfft_solver_1d(SEXP X, SEXP Y, SEXP M, SEXP N, SEXP eps, SEXP iterations){
 }
 
 
+
+
+SEXP rnfct_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
+   
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n = asInteger(N);
+  const char *error_str;
+  NFCT(init_1d)(&p, n, m);
+  
+  int i = 0;
+  if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  } else {
+    error("'X' must be real.");
+  }
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
+  nfct_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < n; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+  //for(int i = 0; i < p.N_total; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i]));
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfct module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFCT(trafo)(&p);
+
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
+
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+  }
+  NFCT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+SEXP rnfct_adjoint_1d(SEXP X, SEXP F, SEXP M, SEXP N){
+   
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n = asInteger(N);
+  const char *error_str;
+  
+  NFCT(init_1d)(&p, n, m);
+  
+  int i = 0;
+  if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  } else {
+    error("'X' must be real.");
+  }
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
+  nfct_precompute_one_psi(&p);
+
+
+  double *ff = REAL(F);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ff[j];
+  }
+  //for(int i = 0; i < p.N_total; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i]));
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfct module,\n");
+      return R_NilValue;
+    }
+  
+  /**  adjoint trafo and show the result */
+  NFCT(adjoint)(&p);
+
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
+
+  ALLOC_REAL_VECTOR(FHAT, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+  }
+  NFCT(finalize)(&p);
+  UNPROTECT(1); /* s_ret */
+  return FHAT;
+      
+}
+
+
+
+
+SEXP rnfst_1d(SEXP X, SEXP FHAT, SEXP M, SEXP N){
+   
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n = asInteger(N);
+  const char *error_str;
+
+  NFST(init_1d)(&p, n, m);
+  
+  int i = 0;
+  if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  } else {
+    error("'X' must be real.");
+  }
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
+  nfst_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.N_total; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+  //for(int i = 0; i < p.N_total; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i]));
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfst module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFST(trafo)(&p);
+
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
+
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+  }
+  NFST(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+SEXP rnfst_adjoint_1d(SEXP X, SEXP F, SEXP M, SEXP N){
+   
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n = asInteger(N);
+  const char *error_str;
+  NFST(init_1d)(&p, n, m);
+  
+  int i = 0;
+  if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  } else {
+    error("'X' must be real.");
+  }
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]);
+  nfst_precompute_one_psi(&p);
+
+
+  double *ff = REAL(F);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ff[j];
+  }
+  //for(int i = 0; i < p.N_total; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i]));
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfst module,\n");
+      return R_NilValue;
+    }
+  
+  /**  adjoint trafo and show the result */
+  NFST(adjoint)(&p);
+
+  //for(int i = 0; i < p.M_total; i++) Rprintf("Here is ndft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i]));
+
+  ALLOC_REAL_VECTOR(FHAT, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+  }
+  NFST(finalize)(&p);
+  UNPROTECT(1); /* s_ret */
+  return FHAT;
+      
+}
 

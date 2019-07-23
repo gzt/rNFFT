@@ -15,6 +15,10 @@ extern SEXP rnfft_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP rndft_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP solvetest(SEXP, SEXP, SEXP);
 extern SEXP rnfft_solver_1d(SEXP , SEXP , SEXP , SEXP , SEXP, SEXP );
+extern SEXP rnfct_1d(SEXP , SEXP  , SEXP , SEXP );
+extern SEXP rnfct_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
+extern SEXP rnfst_1d(SEXP , SEXP  , SEXP , SEXP );
+extern SEXP rnfst_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
 
 static const R_CallMethodDef CallEntries[] = {
     {"test_function", (DL_FUNC) &test_function, 2},
@@ -23,7 +27,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"rnfft_adjoint_1d", (DL_FUNC) &rnfft_adjoint_1d, 4},
     {"rndft_adjoint_1d", (DL_FUNC) &rndft_adjoint_1d, 4},
     {"solvetest", (DL_FUNC) &solvetest, 3},
-     {"rnfft_solver_1d", (DL_FUNC) &rnfft_solver_1d, 6},
+    {"rnfft_solver_1d", (DL_FUNC) &rnfft_solver_1d, 6},
+    {"rnfct_1d", (DL_FUNC) &rnfct_1d, 4},
+    {"rnfct_adjoint_1d", (DL_FUNC) &rnfct_adjoint_1d, 4},
+    {"rnfst_1d", (DL_FUNC) &rnfst_1d, 4},
+    {"rnfst_adjoint_1d", (DL_FUNC) &rnfst_adjoint_1d, 4},
     {NULL, NULL, 0}
 };
 

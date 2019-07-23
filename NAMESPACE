@@ -2,9 +2,13 @@
 
 export(ndft_1d)
 export(ndft_adjoint_1d)
+export(nfct_1d)
+export(nfct_adjoint_1d)
 export(nfft_1d)
 export(nfft_adjoint_1d)
 export(nfft_solver_1d)
+export(nfst_1d)
+export(nfst_adjoint_1d)
 export(test_nfft)
 export(test_solve)
 useDynLib(rNFFT, .registration = TRUE)

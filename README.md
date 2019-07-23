@@ -15,8 +15,9 @@ NEWS (07/21/19): I fixed a thing so now the test function works. From here,
 completing the package should be straightforward once I put a little work in
 (or if anybody looks at the repo, they can take over from here). 
 
-NEWS (07/22/19): I have implemented the 1D functions. I don't have the 2D 
-functions or the 3D fucntions. I do not have the ability to alter the flags in there yet, either.
-However, they can be specified in the future. Caveat emptor. EDIT: I have this working
+NEWS (07/22/19): I have implemented the 1D functions, including the cosine and sine transforms. 
+I don't have the 2D  functions or the 3D functions. I do not have the ability to alter the 
+flags in there yet, either. However, they can be specified in the future. Caveat emptor. 
+EDIT: I have this working
 on Travis now, the issue was telling it to run `autoconf` (I thought the R build 
 process did that automatically, but it doesn't).
