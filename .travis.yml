@@ -9,6 +9,7 @@ r_packages:
   - covr
   - fftw
   - fftwtools
+  - PET
 warnings_are_errors: true
 sudo: false
 cache: packages
