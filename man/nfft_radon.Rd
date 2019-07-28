@@ -24,7 +24,7 @@ nfft_inv_radon(image, N, iter = 10, fn = "polar")
 \item{iter}{number of iterations for inverse}
 }
 \description{
-Radon transform using NFFT
+This doesn't work very well.
 }
 \section{Functions}{
 \itemize{
@@ -34,6 +34,8 @@ Radon transform using NFFT
 \examples{
 P <- PET::phantom()
 
-P_radon <- nfft_radon(P)
-P_inv <- nfft_inv_radon(P_radon, N = 257, iter = 40)
+P_radon <- nfft_radon(P, 257, 257, fn = "linotype")
+image(P_radon)
+P_inv <- nfft_inv_radon(P_radon, N = 257,iter = 2, fn = "linotype")
+image(P_inv)
 }
