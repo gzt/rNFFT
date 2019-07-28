@@ -203,9 +203,9 @@ nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
 #' P <- PET::phantom()
 #'
 #' P_radon <- nfft_radon(P, 514, 514, fn = "polar")
-#' #image(P_radon)
+#' image(P_radon)
 #' P_inv <- nfft_inv_radon((P_radon), N = 257,iter = 5, fn = "polar")
-#' #image(P_inv)
+#' image(P_inv)
 nfft_radon <- function(image, Theta = 181, Rho = 2*round(sqrt(sum((dim(image))^2))/2)+1, fn = "polar"){
    ## image must be N x N or a vector NxN
     dims = dim(image)
