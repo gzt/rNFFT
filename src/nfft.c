@@ -791,11 +791,11 @@ void nfft_2dtest(){
   
 
   /** init a two dimensional plan */
-  /* NFFT(init_guru)(&p, 2, N, M, n, 7, */
-  /*    PRE_PHI_HUT| PRE_FULL_PSI| MALLOC_F_HAT| MALLOC_X| MALLOC_F | */
-  /*    FFTW_INIT| FFT_OUT_OF_PLACE, */
-  /*    FFTW_ESTIMATE| FFTW_DESTROY_INPUT); */
-  NFFT(init_2d)(&p, N[0], N[1], M);
+  NFFT(init_guru)(&p, 2, N, M, n, 7,
+     PRE_PHI_HUT| PRE_FULL_PSI| MALLOC_F_HAT| MALLOC_X| MALLOC_F |
+     FFTW_INIT| FFT_OUT_OF_PLACE,
+     FFTW_ESTIMATE| FFTW_DESTROY_INPUT);
+  /* NFFT(init_2d)(&p, N[0], N[1], M); */
 
   /** init pseudo random nodes */
   rand_shifted_unit_double(p.x, p.d * p.M_total);
@@ -979,3 +979,553 @@ SEXP rndft_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
 }
 
 
+
+SEXP rnfft_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFFT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFFT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  if (CPLXSXP == TYPEOF(X)) {
+    Rcomplex *xx = COMPLEX(X);
+    for (i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i].r + I*xx[i].i;
+    }
+  } else if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] + I*0;
+    }
+  } else {
+    error("'X' must be real or complex.");
+  }
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfft_precompute_one_psi(&p);
+
+
+  Rcomplex *ffhat = COMPLEX(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j].r + I*ffhat[j].i;
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfft_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFFT(adjoint)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_COMPLEX_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i].r = creal(p.f_hat[i]);
+    ret[i].i = cimag(p.f_hat[i]);
+  }
+  NFFT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+SEXP rndft_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFFT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFFT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  if (CPLXSXP == TYPEOF(X)) {
+    Rcomplex *xx = COMPLEX(X);
+    for (i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i].r + I*xx[i].i;
+    }
+  } else if (REALSXP == TYPEOF(X)) {
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] + I*0;
+    }
+  } else {
+    error("'X' must be real or complex.");
+  }
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfft_precompute_one_psi(&p);
+
+
+  Rcomplex *ffhat = COMPLEX(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j].r + I*ffhat[j].i;
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfft_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFFT(adjoint_direct)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_COMPLEX_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i].r = creal(p.f_hat[i]);
+    ret[i].i = cimag(p.f_hat[i]);
+  }
+  NFFT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+
+SEXP rnfct_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFCT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+ 
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] ;
+    }
+ 
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfct_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.N_total; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFCT(trafo)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+ 
+  }
+  NFCT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+SEXP rndct_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFCT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+ 
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+ 
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfct_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.N_total; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFCT(trafo_direct)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+ 
+  }
+  NFCT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+SEXP rnfct_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFCT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfct_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFCT(adjoint)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+ 
+  }
+  NFCT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+SEXP rndct_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFCT(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFCT(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+  
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfct_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfct_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFCT(adjoint_direct)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+ 
+  }
+  NFCT(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+SEXP rnfst_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFST(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+ 
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] ;
+    }
+ 
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfst_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.N_total; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFST(trafo)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+ 
+  }
+  NFST(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+SEXP rndst_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFST(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+ 
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i];
+    }
+ 
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfst_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.N_total; j++){
+    p.f_hat[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFST(trafo_direct)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.M_total);
+  for (i = 0; i < p.M_total; ++i) {
+    ret[i] = (p.f[i]);
+ 
+  }
+  NFST(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+
+SEXP rnfst_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFST(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] ;
+    }
+  
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfst_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFST(adjoint)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+ 
+  }
+  NFST(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}
+
+
+SEXP rndst_adjoint_2d(SEXP X, SEXP FHAT, SEXP M, SEXP N0, SEXP N1){
+   
+  NFST(plan) p;
+  int j;
+  int m = asInteger(M);
+  int n0 = asInteger(N0);
+  int n1 = asInteger(N1);
+  const char *error_str;
+  NFST(init_2d)(&p, n0, n1, m);
+  /* Rprintf("Here is N.total: %d\n", p.N_total); */
+  int i = 0;
+  
+    double *xx = REAL(X);
+    for (int i = 0; i < p.d * p.M_total; ++i) {
+      p.x[i] = xx[i] ;
+    }
+  
+  /* for(int i = 0; i < 7; i++) Rprintf("Here are the x[i]: %f\n",p.x[i]); */
+  nfst_precompute_one_psi(&p);
+
+
+  double *ffhat = REAL(FHAT);
+  for(j = 0; j < p.M_total; j++){
+    p.f[j] = ffhat[j];
+  }
+ /* for(int i = 0; i < 7; i++) Rprintf("Here is f_hat: %f + %f i\n",crealf(p.f_hat[i]), cimagf(p.f_hat[i])); */
+
+  
+  error_str = nfst_check(&p);
+  if (error_str != 0)
+    {
+      Rprintf("Error in nfft module,\n");
+      return R_NilValue;
+    }
+  
+  /** trafo and show the result */
+  NFST(adjoint_direct)(&p);
+
+  /* for(int i = 0; i < 7; i++) Rprintf("Here is nfft %f + %f i\n",crealf(p.f[i]),cimagf(p.f[i])); */
+  /* Rprintf("Here is M_total: %d\n", p.M_total); */
+  ALLOC_REAL_VECTOR(F, ret, p.N_total);
+  for (i = 0; i < p.N_total; ++i) {
+    ret[i] = (p.f_hat[i]);
+ 
+  }
+  NFST(finalize)(&p);
+  
+  UNPROTECT(1); /* s_ret */
+  return F;
+      
+}

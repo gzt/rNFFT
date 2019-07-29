@@ -49,5 +49,5 @@ nfst_1d(x, f_hat)
 f <- nfct_1d(x, f_hat)
 g <- nfst_1d(x, f_hat)
 nfct_adjoint_1d(x,f,14)
-nfst_adjoint_1d(x,g,14)
+nfst_adjoint_1d(x,g,14) # note the length!
 }
