@@ -1,5 +1,8 @@
 
 [![Build Status](https://travis-ci.org/gzt/rNFFT.svg?branch=master)](https://travis-ci.org/gzt/rNFFT)
+ [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+ [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+ [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 # rNFFT
 Writing an R wrapper for the NFFT library (nonequispaced nodes Fast Fourier Transform)
