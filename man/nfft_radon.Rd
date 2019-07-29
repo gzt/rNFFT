@@ -34,7 +34,7 @@ This doesn't work very well.
 \examples{
 P <- PET::phantom()
 
-P_radon <- nfft_radon(P, 514, 514, fn = "polar")
+P_radon <- nfft_radon(P, 514,514, fn = "polar")
 image(P_radon)
 P_inv <- nfft_inv_radon((P_radon), N = 257,iter = 5, fn = "polar")
 image(P_inv)

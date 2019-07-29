@@ -33,6 +33,8 @@ NULL
 ##' set.seed(20190722)
 ##' test_nfft(19L,14L)
 ##' test_solve(8L,16L,9L)
+##' set.seed(20190728)
+##' nfft_test_2d()
 test_nfft<- function(M, N){
     
   .Call("test_function", as.integer(M), as.integer(N), PACKAGE="rNFFT")
@@ -46,6 +48,13 @@ test_nfft<- function(M, N){
 test_solve <- function(M, N, iterations){
     .Call("solvetest", as.integer(M), as.integer(N), as.integer(iterations), PACKAGE = "rNFFT")
     return(TRUE)
+}
+
+##' @export
+##' @describeIn test_nfft 2D test: displays the 2D test (no input)
+nfft_test_2d <- function(){
+    .Call("nfft_2dtest", PACKAGE = "rNFFT")
+    TRUE
 }
 
 ##' 1-D Non-Uniform Direct Fourier Tranform
@@ -191,6 +200,69 @@ nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
     
 }
 
+
+##' 2-D Non-Uniform Direct Fourier Tranform
+##'
+##' The non-uniform Fourier transform takes non-uniform samples \eqn{x}
+##' from the $d$-dimensional torus \eqn{[0.5,0.5)^d}.
+##'
+##' The NDFT functions compute the Fourier transform directly. This is slow.
+##' The NFFT functions use the FFT to compute this, which should be faster.
+##' The adjoint, in this case, is not the same as the inverse. Solving the
+##' inverse problem requires approximations. Here we present the 2D NDFT,
+##' NFFT, and their adjoints. You most likely want to use the \code{nfft_2d}
+##' and \code{nfft_adjoint_2d} functions rather than the \code{dft} functions.
+##'
+##' @title 2-D NFFT
+##' @export
+##' @param x two dimensional complex vector in \eqn{[-0.5,0.5)^2}
+##' @param f_hat set of frequencies
+##' @examples 
+##' set.seed(20190728)
+##' x <- matrix(runif(2*32*14)-.5, ncol=2, byrow = TRUE)
+##' 
+##' f_hat = 1:(32*14)
+##' for(i in 1:(32*14)) f_hat[i] = runif(1)*1i + runif(1)
+##' f_hatmatrix = matrix(f_hat, nrow = 32) 
+##' f_matrix <- nfft_2d(x, f_hatmatrix)
+##' fd_matrix <- ndft_2d(x, f_hatmatrix)
+##' f_matrix[1:3]
+##' fd_matrix[1:3]
+nfft_2d <- function(x, f_hat){
+    dims = dim(x)
+    fdims = dim(f_hat)
+    if(length(dims)!=2) stop("x must be 2-dimensional")
+    if(length(fdims)!=2) stop("f_hat must be 2-dimensional")
+    M = dims[1]
+    N0 = fdims[1]
+    N1 = fdims[2]
+    if((N0%%2 != 0) || N1%%2 !=0) stop("Must have an even number of frequencies")
+    xvec = c(t(x))
+    f_hatvec = c(t(f_hat))
+    .Call("rnfft_2d", xvec, as.complex(f_hatvec), as.integer(M), as.integer(N0), as.integer(N1), PACKAGE="rNFFT")
+}
+
+##' 2-D direct Fourier Transform
+##' @export
+##' @describeIn nfft_2d 
+ndft_2d <- function(x, f_hat){
+    dims = dim(x)
+    fdims = dim(f_hat)
+    if(length(dims)!=2) stop("x must be 2-dimensional")
+    if(length(fdims)!=2) stop("f_hat must be 2-dimensional")
+    M = dims[1]
+    N0 = fdims[1]
+    N1 = fdims[2]
+    if((N0%%2 != 0) || N1%%2 !=0) stop("Must have an even number of frequencies")
+    xvec = c(t(x))
+    f_hatvec = c(t(f_hat))
+    .Call("rndft_2d", xvec, as.complex(f_hatvec), as.integer(M), as.integer(N0), as.integer(N1), PACKAGE="rNFFT")
+}
+
+
+
+
+
 #' Radon transform using NFFT
 #'
 #' This doesn't work very well. 
@@ -202,7 +274,7 @@ nfft_solver_1d <- function(x, f, N, eps = 1e-12, iterations = 10){
 #' @examples
 #' P <- PET::phantom()
 #'
-#' P_radon <- nfft_radon(P, 514, 514, fn = "polar")
+#' P_radon <- nfft_radon(P, 514,514, fn = "polar")
 #' image(P_radon)
 #' P_inv <- nfft_inv_radon((P_radon), N = 257,iter = 5, fn = "polar")
 #' image(P_inv)

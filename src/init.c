@@ -21,7 +21,9 @@ extern SEXP rnfst_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP rnfst_adjoint_1d(SEXP , SEXP  , SEXP , SEXP );
 extern SEXP c_radon(SEXP , SEXP  , SEXP , SEXP , SEXP);
 extern SEXP c_inv_radon(SEXP , SEXP  , SEXP , SEXP , SEXP, SEXP);
-
+extern SEXP rnfft_2d(SEXP , SEXP , SEXP , SEXP , SEXP);
+extern SEXP rndft_2d(SEXP , SEXP , SEXP , SEXP , SEXP);
+extern void nfft_2dtest();
 
 static const R_CallMethodDef CallEntries[] = {
     {"test_function", (DL_FUNC) &test_function, 2},
@@ -37,6 +39,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"rnfst_adjoint_1d", (DL_FUNC) &rnfst_adjoint_1d, 4},
     {"c_radon", (DL_FUNC) &c_radon, 5},
     {"c_inv_radon", (DL_FUNC) &c_inv_radon, 6},
+    {"rnfft_2d", (DL_FUNC) &rnfft_2d, 5},
+    {"rndft_2d", (DL_FUNC) &rndft_2d, 5},
+    {"nfft_2dtest", (DL_FUNC) &nfft_2dtest, 0},
     {NULL, NULL, 0}
 };
 

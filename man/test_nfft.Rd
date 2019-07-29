@@ -3,11 +3,14 @@
 \name{test_nfft}
 \alias{test_nfft}
 \alias{test_solve}
+\alias{nfft_test_2d}
 \title{Test Function}
 \usage{
 test_nfft(M, N)
 
 test_solve(M, N, iterations)
+
+nfft_test_2d()
 }
 \arguments{
 \item{M}{integer, number of nodes}
@@ -28,12 +31,16 @@ Generates Test Output. Compare the output the results
 \section{Functions}{
 \itemize{
 \item \code{test_solve}: Test solver: displays the 1D solver.
+
+\item \code{nfft_test_2d}: 2D test: displays the 2D test (no input)
 }}
 
 \examples{
 set.seed(20190722)
 test_nfft(19L,14L)
 test_solve(8L,16L,9L)
+set.seed(20190728)
+nfft_test_2d()
 }
 \author{
 Geoffrey Z. Thompson
