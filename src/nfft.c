@@ -791,10 +791,11 @@ void nfft_2dtest(){
   
 
   /** init a two dimensional plan */
-  NFFT(init_guru)(&p, 2, N, M, n, 7,
-     PRE_PHI_HUT| PRE_FULL_PSI| MALLOC_F_HAT| MALLOC_X| MALLOC_F |
-     FFTW_INIT| FFT_OUT_OF_PLACE,
-     FFTW_ESTIMATE| FFTW_DESTROY_INPUT);
+  /* NFFT(init_guru)(&p, 2, N, M, n, 7, */
+  /*    PRE_PHI_HUT| PRE_FULL_PSI| MALLOC_F_HAT| MALLOC_X| MALLOC_F | */
+  /*    FFTW_INIT| FFT_OUT_OF_PLACE, */
+  /*    FFTW_ESTIMATE| FFTW_DESTROY_INPUT); */
+  NFFT(init_2d)(&p, N[0], N[1], M);
 
   /** init pseudo random nodes */
   rand_shifted_unit_double(p.x, p.d * p.M_total);

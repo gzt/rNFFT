@@ -26,7 +26,8 @@ TRUE
 Test Function
 }
 \details{
-Generates Test Output. Compare the output the results
+Generates Test Output specified in NFFT documentation and source code.
+Compare the output to the results of the examples.
 }
 \section{Functions}{
 \itemize{

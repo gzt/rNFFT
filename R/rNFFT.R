@@ -18,7 +18,8 @@ NULL
 
 ##' Test Function
 ##'
-##' Generates Test Output. Compare the output the results
+##' Generates Test Output specified in NFFT documentation and source code.
+##' Compare the output to the results of the examples.
 ##'
 ##' @title Test Function
 ##' @param M integer, number of nodes
@@ -238,7 +239,7 @@ nfft_2d <- function(x, f_hat){
     N1 = fdims[2]
     if((N0%%2 != 0) || N1%%2 !=0) stop("Must have an even number of frequencies")
     xvec = c(t(x))
-    f_hatvec = c(t(f_hat))
+    f_hatvec = c(f_hat)
     .Call("rnfft_2d", xvec, as.complex(f_hatvec), as.integer(M), as.integer(N0), as.integer(N1), PACKAGE="rNFFT")
 }
 
@@ -255,7 +256,7 @@ ndft_2d <- function(x, f_hat){
     N1 = fdims[2]
     if((N0%%2 != 0) || N1%%2 !=0) stop("Must have an even number of frequencies")
     xvec = c(t(x))
-    f_hatvec = c(t(f_hat))
+    f_hatvec = c(f_hat)
     .Call("rndft_2d", xvec, as.complex(f_hatvec), as.integer(M), as.integer(N0), as.integer(N1), PACKAGE="rNFFT")
 }
 
