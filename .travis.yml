@@ -10,6 +10,7 @@ r_packages:
   - fftw
   - fftwtools
   - PET
+  - pkgdown
 warnings_are_errors: true
 sudo: false
 cache: packages
@@ -20,3 +21,8 @@ r:
  - release
  - oldrel
  - 3.3
+before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+deploy:
+  provider: script
+  script: Rscript -e 'pkgdown::deploy_site_github()'
+  skip_cleanup: true
