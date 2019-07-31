@@ -6,7 +6,7 @@ Authors@R: c(person(c("Geoffrey", "Thompson"),email="gzthompson@gmail.com",
     person(c("Daniel", "Potts"), role = c("ctb")),
     person(c("Jens", "Keiner"), role = c("ctb")),
     person(c("Stefan", "Kunis"), role = c("ctb")))
-Description: Provides a wrapper around the NFFT 3.0 C library, which implements 
+Description: Provides a wrapper around the NFFT 3 C library, which implements 
     the fast Fourier transform for non-equispaced nodes, its adjoint, and its
     inversion. This provides functions for the NFFT and Solver routines.
 Depends: R (>= 3.3.0)
