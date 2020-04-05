@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Inverse of the 1-D NFFT. — nfft_solver_1d • rNFFT</title>
+<title>PET Phantom Example — phantom_example • rNFFT</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Inverse of the 1-D NFFT. — nfft_solver_1d" />
-<meta property="og:description" content="1-D NFFT solver" />
+<meta property="og:title" content="PET Phantom Example — phantom_example" />
+<meta property="og:description" content="PET Phantom Example" />
 
 
 
@@ -111,67 +111,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Inverse of the 1-D NFFT.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/gzt/rNFFT/blob/master/R/rNFFT.R'><code>R/rNFFT.R</code></a></small>
-    <div class="hidden name"><code>nfft_solver_1d.Rd</code></div>
+    <h1>PET Phantom Example</h1>
+    <small class="dont-index">Source: <a href='https://github.com/gzt/rNFFT/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>phantom_example.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>1-D NFFT solver</p>
+    <p>PET Phantom Example</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nfft_solver_1d</span>(<span class='no'>x</span>, <span class='no'>f</span>, <span class='no'>n</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-12</span>, <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
+    <pre class="usage"><span class='no'>phantom_example</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>input vector (real, length <code>m</code>)</p></td>
-    </tr>
-    <tr>
-      <th>f</th>
-      <td><p>Outputted Fourier coefficients (complex, length <code>m</code>)</p></td>
-    </tr>
-    <tr>
-      <th>n</th>
-      <td><p>Number of coefficients for the inverse - must be even.</p></td>
-    </tr>
-    <tr>
-      <th>eps</th>
-      <td><p>convergence criterion</p></td>
-    </tr>
-    <tr>
-      <th>iterations</th>
-      <td><p>number of iterations for solve to run (at most)</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>vector of length <code>n</code> of solutions \(\hat{f}\).</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A \(257 \times 257\) matrix representing a
+PET phantom. From the output of the defunct PET package.</p>
 
-    <p>Unlike in the case of the equispaced Fourier transform, the adjoint is NOT
-the inverse of the non-equispaced Fourier transform. The solution must be
-found numerically.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>20190722</span>)
-<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>8</span>) - <span class='fl'>0.5</span>
-<span class='no'>f</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>8</span>
-<span class='kw'>for</span>(<span class='no'>i</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='fl'>8</span>) <span class='no'>f</span>[<span class='no'>i</span>] <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>1</span>)*<span class='fl'>1i</span> + <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>1</span>)
-<span class='no'>x</span></div><div class='output co'>#&gt; [1] -0.47454476  0.30982998  0.36415208 -0.06394345 -0.28942470 -0.25067326
-#&gt; [7]  0.21653775 -0.04082067</div><div class='input'><span class='no'>f</span></div><div class='output co'>#&gt; [1] 0.7812607+0.4266779i 0.6472702+0.4293023i 0.0545203+0.5387830i
-#&gt; [4] 0.8700005+0.9764817i 0.5458036+0.3668217i 0.7543649+0.1174361i
-#&gt; [7] 0.2273255+0.9539319i 0.8550146+0.4984065i</div><div class='input'><span class='fu'>nfft_solver_1d</span>(<span class='no'>x</span>,<span class='no'>f</span>,<span class='fl'>16</span>,<span class='fl'>1e-35</span>,<span class='fl'>8</span>)</div><div class='output co'>#&gt;  [1] -0.05107041-0.08654144i -0.01753409-0.10403721i  0.07913661-0.01598169i
-#&gt;  [4] -0.11405562+0.05161826i  0.09133340+0.03616554i -0.08297136+0.07520460i
-#&gt;  [7] -0.07108499-0.03030133i  0.06047546+0.01399436i  0.25523117+0.21353402i
-#&gt; [10] -0.05183534-0.01806732i  0.01655136-0.07277833i  0.15298947-0.04640700i
-#&gt; [13]  0.23893991+0.00313112i -0.00178596-0.23420414i -0.08194209-0.06516815i
-#&gt; [16] -0.01573409-0.13599679i</div><div class='input'><span class='fu'><a href='ndft_1d.html'>nfft_1d</a></span>(<span class='no'>x</span>, <span class='fu'>nfft_solver_1d</span>(<span class='no'>x</span>,<span class='no'>f</span>,<span class='fl'>16</span>,<span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-35</span>))</div><div class='output co'>#&gt; [1] 0.7812607+0.4266779i 0.6472702+0.4293023i 0.0545203+0.5387830i
-#&gt; [4] 0.8700005+0.9764817i 0.5458036+0.3668217i 0.7543649+0.1174361i
-#&gt; [7] 0.2273255+0.9539319i 0.8550146+0.4984065i</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
