@@ -19,5 +19,4 @@ Suggests:
     testthat (>= 2.1.0)
 RoxygenNote: 7.1.0
 Imports: 
-    PET
 Roxygen: list(markdown = TRUE)
