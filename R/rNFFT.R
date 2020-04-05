@@ -23,7 +23,7 @@ NULL
 ##'
 ##' @title Test Function
 ##' @param m integer, number of nodes
-##' @param n integer, number of frequences (even, less than \code{m}).
+##' @param n integer, number of frequences (even, less than `m`).
 ##'
 ##'
 ##' @return TRUE
@@ -68,17 +68,17 @@ nfft_test_2d <- function() {
 ##' The NFFT functions use the FFT to compute this, which should be faster.
 ##' The adjoint, in this case, is not the same as the inverse. Solving the
 ##' inverse problem requires approximations. Here we present the 1D NDFT,
-##' NFFT, and their adjoints. You most likely want to use the \code{nfft_1d}
-##' and \code{nfft_adjoint_1d} functions rather than the \code{dft} functions.
+##' NFFT, and their adjoints. You most likely want to use the `nfft_1d`
+##' and `nfft_adjoint_1d` functions rather than the `dft` functions.
 ##'
 ##'
 ##' @title 1-D NFFT
-##' @param x (real) vector of nodes of length \code{m},
-##'    must be in \code{[-0.5,0.5)}.
+##' @param x (real) vector of nodes of length `m`,
+##'    must be in `[-0.5,0.5)`.
 ##' @param f_hat (complex) vector of \eqn{\hat{f}}{f_hat} entries -
-##'     (of length \code{n}) and length must be even.
+##'     (of length `n`) and length must be even.
 ##' @return vector of \eqn{f}, the results of the transform
-##'     (of length \code{m}).
+##'     (of length `m`).
 ##'
 ##' @references Keiner, J., Kunis, S., and Potts, D. ''Using NFFT 3 - a software
 ##'     library for various nonequispaced fast Fourier transforms'' ACM Trans.
@@ -131,7 +131,7 @@ nfft_1d <- function(x, f_hat) {
 
 
 ##' 1-D Non-Uniform Fast Fourier Tranform (Adjoint)
-##' @param f frequencies for adjoint, same length as \code{x}
+##' @param f frequencies for adjoint, same length as `x`
 ##' @param n number of frequencies for transform, specified for adjoint.
 ##' @describeIn ndft_1d
 ##'
@@ -176,12 +176,12 @@ ndft_adjoint_1d <- function(x, f, n) {
 ##' the inverse of the non-equispaced Fourier transform. The solution must be
 ##' found numerically.
 ##' @title Inverse of the 1-D NFFT.
-##' @param x input vector (real, length \code{m})
-##' @param f Outputted Fourier coefficients (complex, length \code{m})
+##' @param x input vector (real, length `m`)
+##' @param f Outputted Fourier coefficients (complex, length `m`)
 ##' @param n Number of coefficients for the inverse - must be even.
 ##' @param eps convergence criterion
 ##' @param iterations number of iterations for solve to run (at most)
-##' @return vector of length \code{n} of solutions \eqn{\hat{f}}{f_hat}.
+##' @return vector of length `n` of solutions \eqn{\hat{f}}{f_hat}.
 ##' @export
 ##' @examples
 ##' set.seed(20190722)

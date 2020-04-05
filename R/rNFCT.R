@@ -2,7 +2,7 @@
 ##' 1-D Non-Uniform Fast Cosine/Sine Tranform
 ##'
 ##' Similar to the NFFT, except the cosine/sine transform instead of the
-##' FFT. Note that all values of \code{x} must be in \eqn{[0,1/2)}.
+##' FFT. Note that all values of `x` must be in \eqn{[0,1/2)}.
 ##' @inheritParams ndft_1d
 ##' @export
 ##' @examples
@@ -33,7 +33,7 @@ nfct_1d <- function(x, f_hat) {
 
 
 ##' 1-D Non-Uniform Fast Cosine Tranform (Adjoint)
-##' @param f frequencies for adjoint, same length as \code{x}
+##' @param f frequencies for adjoint, same length as `x`
 ##' @param n number of frequencies for transform, specified for adjoint.
 ##' @describeIn nfct_1d The adjoint transform
 ##'
@@ -95,8 +95,8 @@ nfst_adjoint_1d <- function(x, f, n) {
 ##' The NFCT functions use the FFT to compute this, which should be faster.
 ##' The adjoint, in this case, is not the same as the inverse. Solving the
 ##' inverse problem requires approximations. Here we present the 2D NDCT,
-##' NFCT, and their adjoints. You most likely want to use the \code{nfct_2d}
-##' and \code{nfct_adjoint_2d} functions rather than the \code{dct} functions.
+##' NFCT, and their adjoints. You most likely want to use the `nfct_2d`
+##' and `nfct_adjoint_2d` functions rather than the `dct` functions.
 ##'
 ##' @title 2-D NFCT/NFST
 ##' @export
@@ -171,7 +171,7 @@ ndct_2d <- function(x, f_hat) {
 
 
 ##' 2-D Non-Uniform Fast Cosine Tranform (Adjoint)
-##' @param f frequencies for adjoint, same length as \code{x}
+##' @param f frequencies for adjoint, same length as `x`
 ##' @param n0 number of frequencies in the first dimension for transform,
 ##'     specified for adjoint.
 ##' @param n1 number of frequencies in the second dimension for transform,

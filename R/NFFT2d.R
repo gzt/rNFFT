@@ -8,8 +8,8 @@
 ##' The NFFT functions use the FFT to compute this, which should be faster.
 ##' The adjoint, in this case, is not the same as the inverse. Solving the
 ##' inverse problem requires approximations. Here we present the 2D NDFT,
-##' NFFT, and their adjoints. You most likely want to use the \code{nfft_2d}
-##' and \code{nfft_adjoint_2d} functions rather than the \code{dft} functions.
+##' NFFT, and their adjoints. You most likely want to use the `nfft_2d`
+##' and `nfft_adjoint_2d` functions rather than the `dft` functions.
 ##'
 ##' @title 2-D NFFT
 ##' @export
@@ -80,7 +80,7 @@ ndft_2d <- function(x, f_hat) {
 
 
 ##' 2-D Non-Uniform Fast Fourier Tranform (Adjoint)
-##' @param f frequencies for adjoint, same length as \code{x}
+##' @param f frequencies for adjoint, same length as `x`
 ##' @param n0 number of frequencies in the first dimension for
 ##' transform, specified for adjoint.
 ##' @param n1 number of frequencies in the second dimension for

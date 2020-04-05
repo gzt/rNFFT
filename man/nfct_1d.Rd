@@ -17,7 +17,7 @@ nfst_adjoint_1d(x, f, n)
 }
 \arguments{
 \item{x}{(real) vector of nodes of length \code{m},
-must be in \code{[-0.5,0.5)}.}
+must be in \verb{[-0.5,0.5)}.}
 
 \item{f_hat}{(complex) vector of \eqn{\hat{f}}{f_hat} entries -
 (of length \code{n}) and length must be even.}
