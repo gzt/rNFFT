@@ -18,7 +18,7 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          sudo apt-get install -y libfftw3-3 libfftw3-dev libnfft3-2 libnfft3-2 libnfft3-dev
+          sudo apt-get install -y libfftw3-3 libfftw3-dev libnfft3-2 libnfft3-2 libnfft3-dev libcurl4-openssl-dev
           autoconf
           Rscript -e "install.packages('remotes')"
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
@@ -35,8 +35,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: macOS-r-3.6-${{ hashFiles('depends.Rds') }}
-          restore-keys: macOS-r-3.6-
+          key: ${{ runner.os }}-${{ hashFiles('depends.Rds') }}
+          restore-keys: ${{ runner.os }}
 
       - name: Install dependencies
         run: |
