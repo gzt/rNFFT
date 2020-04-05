@@ -38,9 +38,9 @@ Requires a square image.
 }}
 
 \examples{
-P <- PET::phantom()
-image(P)
-P_radon <- nfft_radon(P, 514, 514, fn = "polar")
+data(phantom_example)
+image(phantom_example)
+P_radon <- nfft_radon(phantom_example, 514, 514, fn = "polar")
 image(P_radon)
 P_inv <- nfft_inv_radon((P_radon), n = 257, iter = 2, fn = "polar")
 image(P_inv)
