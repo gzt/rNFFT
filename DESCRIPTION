@@ -20,3 +20,4 @@ Suggests:
 RoxygenNote: 7.1.0
 Imports: 
     PET
+Roxygen: list(markdown = TRUE)

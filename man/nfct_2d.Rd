@@ -34,13 +34,16 @@ ndst_adjoint_2d(x, f, n0, n1)
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{n0}{number of frequencies in the first dimension for transform, specified for adjoint.}
+\item{n0}{number of frequencies in the first dimension for transform,
+specified for adjoint.}
 
-\item{n1}{number of frequencies in the second dimension for transform, specified for adjoint.}
+\item{n1}{number of frequencies in the second dimension for transform,
+specified for adjoint.}
 }
 \description{
-The non-equispaced trigonometric transforms (sine and cosine) take
-non-uniform samples \eqn{x} from the $d$-dimensional torus \eqn{[0,0.5)^d}.
+The non-equispaced trigonometric transforms
+(sine and cosine) take non-uniform samples \eqn{x} from the $d$-dimensional
+torus \eqn{[0,0.5)^d}.
 
 The NDCT functions compute the cosine transform directly. This is slow.
 The NFCT functions use the FFT to compute this, which should be faster.

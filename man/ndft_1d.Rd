@@ -16,7 +16,8 @@ nfft_adjoint_1d(x, f, n)
 ndft_adjoint_1d(x, f, n)
 }
 \arguments{
-\item{x}{(real) vector of nodes of length \code{m}, must be in \code{[-0.5,0.5)}.}
+\item{x}{(real) vector of nodes of length \code{m},
+must be in \code{[-0.5,0.5)}.}
 
 \item{f_hat}{(complex) vector of \eqn{\hat{f}}{f_hat} entries -
 (of length \code{n}) and length must be even.}
@@ -26,7 +27,8 @@ ndft_adjoint_1d(x, f, n)
 \item{n}{number of frequencies for transform, specified for adjoint.}
 }
 \value{
-vector of \eqn{f}, the results of the transform (of length \code{m}).
+vector of \eqn{f}, the results of the transform
+(of length \code{m}).
 }
 \description{
 1-D Non-Uniform Direct Fourier Tranform
@@ -67,8 +69,8 @@ ndft_adjoint_1d(x,f,14)
 }
 \references{
 Keiner, J., Kunis, S., and Potts, D. ''Using NFFT 3 - a software
-    library for various nonequispaced fast Fourier transforms'' ACM Trans.
-    Math. Software,36, Article 19, 1-30, 2009.
+library for various nonequispaced fast Fourier transforms'' ACM Trans.
+Math. Software,36, Article 19, 1-30, 2009.
 }
 \author{
 Geoffrey Z. Thompson

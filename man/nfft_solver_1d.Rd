@@ -25,8 +25,8 @@ vector of length \code{n} of solutions \eqn{\hat{f}}{f_hat}.
 }
 \details{
 Unlike in the case of the equispaced Fourier transform, the adjoint is NOT
-the inverse of the non-equispaced Fourier transform. The solution must be found
-numerically.
+the inverse of the non-equispaced Fourier transform. The solution must be
+found numerically.
 }
 \examples{
 set.seed(20190722)

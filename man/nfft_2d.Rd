@@ -22,9 +22,11 @@ ndft_adjoint_2d(x, f, n0, n1)
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{n0}{number of frequencies in the first dimension for transform, specified for adjoint.}
+\item{n0}{number of frequencies in the first dimension for
+transform, specified for adjoint.}
 
-\item{n1}{number of frequencies in the second dimension for transform, specified for adjoint.}
+\item{n1}{number of frequencies in the second dimension for
+transform, specified for adjoint.}
 }
 \description{
 2-D Non-equispaced Fourier Tranform

@@ -28,7 +28,8 @@ nfft_inv_radon(image, n, iter = 10, fn = "polar")
 \item{iter}{number of iterations for inverse}
 }
 \description{
-A radon transformation using the non-equispaced fast Fourier transform (NFFT).
+A radon transformation using the non-equispaced
+fast Fourier transform (NFFT).
 Requires a square image.
 }
 \section{Functions}{
