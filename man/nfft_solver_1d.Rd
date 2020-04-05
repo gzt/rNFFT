@@ -4,21 +4,21 @@
 \alias{nfft_solver_1d}
 \title{Inverse of the 1-D NFFT.}
 \usage{
-nfft_solver_1d(x, f, N, eps = 1e-12, iterations = 10)
+nfft_solver_1d(x, f, n, eps = 1e-12, iterations = 10)
 }
 \arguments{
-\item{x}{input vector (real, length \code{M})}
+\item{x}{input vector (real, length \code{m})}
 
-\item{f}{Outputted Fourier coefficients (complex, length \code{M})}
+\item{f}{Outputted Fourier coefficients (complex, length \code{m})}
 
-\item{N}{Number of coefficients for the inverse - must be even.}
+\item{n}{Number of coefficients for the inverse - must be even.}
 
 \item{eps}{convergence criterion}
 
 \item{iterations}{number of iterations for solve to run (at most)}
 }
 \value{
-vector of length \code{N} of solutions \eqn{\hat{f}}{f_hat}.
+vector of length \code{n} of solutions \eqn{\hat{f}}{f_hat}.
 }
 \description{
 1-D NFFT solver

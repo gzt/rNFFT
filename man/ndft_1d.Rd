@@ -11,22 +11,22 @@ ndft_1d(x, f_hat)
 
 nfft_1d(x, f_hat)
 
-nfft_adjoint_1d(x, f, N)
+nfft_adjoint_1d(x, f, n)
 
-ndft_adjoint_1d(x, f, N)
+ndft_adjoint_1d(x, f, n)
 }
 \arguments{
-\item{x}{(real) vector of nodes of length \code{M}, must be in \code{[-0.5,0.5)}.}
+\item{x}{(real) vector of nodes of length \code{m}, must be in \code{[-0.5,0.5)}.}
 
 \item{f_hat}{(complex) vector of \eqn{\hat{f}}{f_hat} entries -
-(of length \code{N}) and length must be even.}
+(of length \code{n}) and length must be even.}
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{N}{number of frequencies for transform, specified for adjoint.}
+\item{n}{number of frequencies for transform, specified for adjoint.}
 }
 \value{
-vector of \eqn{f}, the results of the transform (of length \code{M}).
+vector of \eqn{f}, the results of the transform (of length \code{m}).
 }
 \description{
 1-D Non-Uniform Direct Fourier Tranform

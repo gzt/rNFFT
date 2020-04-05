@@ -15,17 +15,17 @@ nfct_2d(x, f_hat)
 
 ndct_2d(x, f_hat)
 
-nfct_adjoint_2d(x, f, N0, N1)
+nfct_adjoint_2d(x, f, n0, n1)
 
-ndct_adjoint_2d(x, f, N0, N1)
+ndct_adjoint_2d(x, f, n0, n1)
 
 nfst_2d(x, f_hat)
 
 ndst_2d(x, f_hat)
 
-nfst_adjoint_2d(x, f, N0, N1)
+nfst_adjoint_2d(x, f, n0, n1)
 
-ndst_adjoint_2d(x, f, N0, N1)
+ndst_adjoint_2d(x, f, n0, n1)
 }
 \arguments{
 \item{x}{two dimensional complex vector in \eqn{[0,0.5)^2}}
@@ -34,14 +34,11 @@ ndst_adjoint_2d(x, f, N0, N1)
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{N0}{number of frequencies in the first dimension for transform, specified for adjoint.}
+\item{n0}{number of frequencies in the first dimension for transform, specified for adjoint.}
 
-\item{N1}{number of frequencies in the second dimension for transform, specified for adjoint.}
+\item{n1}{number of frequencies in the second dimension for transform, specified for adjoint.}
 }
 \description{
-2-D Non-equispaced Trigonometric Tranform
-}
-\details{
 The non-equispaced trigonometric transforms (sine and cosine) take
 non-uniform samples \eqn{x} from the $d$-dimensional torus \eqn{[0,0.5)^d}.
 
@@ -51,6 +48,9 @@ The adjoint, in this case, is not the same as the inverse. Solving the
 inverse problem requires approximations. Here we present the 2D NDCT,
 NFCT, and their adjoints. You most likely want to use the \code{nfct_2d}
 and \code{nfct_adjoint_2d} functions rather than the \code{dct} functions.
+}
+\details{
+2-D Non-equispaced Trigonometric Tranform
 }
 \section{Functions}{
 \itemize{
@@ -75,7 +75,7 @@ x <- matrix(runif(2*32*14)*.5, ncol=2, byrow = TRUE)
 
 f_hat = 1:(32*14)
 for(i in 1:(32*14)) f_hat[i] = runif(1)
-f_hatmatrix = matrix(f_hat, nrow = 32) 
+f_hatmatrix = matrix(f_hat, nrow = 32)
 f_vector <- nfct_2d(x, f_hatmatrix)
 fs_vector <-  nfst_2d(x, f_hatmatrix)
 fd_vector <- ndct_2d(x, f_hatmatrix)

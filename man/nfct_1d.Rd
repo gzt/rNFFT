@@ -9,21 +9,21 @@
 \usage{
 nfct_1d(x, f_hat)
 
-nfct_adjoint_1d(x, f, N)
+nfct_adjoint_1d(x, f, n)
 
 nfst_1d(x, f_hat)
 
-nfst_adjoint_1d(x, f, N)
+nfst_adjoint_1d(x, f, n)
 }
 \arguments{
-\item{x}{(real) vector of nodes of length \code{M}, must be in \code{[-0.5,0.5)}.}
+\item{x}{(real) vector of nodes of length \code{m}, must be in \code{[-0.5,0.5)}.}
 
 \item{f_hat}{(complex) vector of \eqn{\hat{f}}{f_hat} entries -
-(of length \code{N}) and length must be even.}
+(of length \code{n}) and length must be even.}
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{N}{number of frequencies for transform, specified for adjoint.}
+\item{n}{number of frequencies for transform, specified for adjoint.}
 }
 \description{
 Similar to the NFFT, except the cosine/sine transform instead of the

@@ -3,7 +3,6 @@
 \docType{package}
 \name{rNFFT}
 \alias{rNFFT}
-\alias{rNFFT-package}
 \title{R wrapper for the NFFT library (nonequispaced nodes Fast Fourier Transform)}
 \description{
 Provides a wrapper around the NFFT 3.0 C library, which implements

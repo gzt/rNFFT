@@ -6,16 +6,16 @@
 \alias{nfft_test_2d}
 \title{Test Function}
 \usage{
-test_nfft(M, N)
+test_nfft(m, n)
 
-test_solve(M, N, iterations)
+test_solve(m, n, iterations)
 
 nfft_test_2d()
 }
 \arguments{
-\item{M}{integer, number of nodes}
+\item{m}{integer, number of nodes}
 
-\item{N}{integer, number of frequences (even, less than \code{M}).}
+\item{n}{integer, number of frequences (even, less than \code{m}).}
 
 \item{iterations}{Number of iterations (for solver)}
 }

@@ -11,9 +11,9 @@ nfft_2d(x, f_hat)
 
 ndft_2d(x, f_hat)
 
-nfft_adjoint_2d(x, f, N0, N1)
+nfft_adjoint_2d(x, f, n0, n1)
 
-ndft_adjoint_2d(x, f, N0, N1)
+ndft_adjoint_2d(x, f, n0, n1)
 }
 \arguments{
 \item{x}{two dimensional complex vector in \eqn{[-0.5,0.5)^2}}
@@ -22,9 +22,9 @@ ndft_adjoint_2d(x, f, N0, N1)
 
 \item{f}{frequencies for adjoint, same length as \code{x}}
 
-\item{N0}{number of frequencies in the first dimension for transform, specified for adjoint.}
+\item{n0}{number of frequencies in the first dimension for transform, specified for adjoint.}
 
-\item{N1}{number of frequencies in the second dimension for transform, specified for adjoint.}
+\item{n1}{number of frequencies in the second dimension for transform, specified for adjoint.}
 }
 \description{
 2-D Non-equispaced Fourier Tranform
@@ -55,7 +55,7 @@ x <- matrix(runif(2*32*14)-.5, ncol=2, byrow = TRUE)
 
 f_hat = 1:(32*14)
 for(i in 1:(32*14)) f_hat[i] = runif(1)*1i + runif(1)
-f_hatmatrix = matrix(f_hat, nrow = 32) 
+f_hatmatrix = matrix(f_hat, nrow = 32)
 f_vector <- nfft_2d(x, f_hatmatrix)
 fd_vector <- ndft_2d(x, f_hatmatrix)
 f_vector[1:3]

@@ -5,21 +5,25 @@
 \alias{nfft_inv_radon}
 \title{Radon transform using NFFT}
 \usage{
-nfft_radon(image, Theta = 181, Rho = 2 *
-  round(sqrt(sum((dim(image))^2))/2) + 1, fn = "polar")
+nfft_radon(
+  image,
+  theta = 181,
+  rho = 2 * round(sqrt(sum((dim(image))^2))/2) + 1,
+  fn = "polar"
+)
 
-nfft_inv_radon(image, N, iter = 10, fn = "polar")
+nfft_inv_radon(image, n, iter = 10, fn = "polar")
 }
 \arguments{
 \item{image}{square image}
 
-\item{Theta}{Number of theta slices}
+\item{theta}{Number of theta slices}
 
-\item{Rho}{Number of rho slices}
+\item{rho}{Number of rho slices}
 
 \item{fn}{Whether to use polar or linotype (polar by default)}
 
-\item{N}{size of image}
+\item{n}{size of image}
 
 \item{iter}{number of iterations for inverse}
 }
@@ -34,9 +38,9 @@ Requires a square image.
 
 \examples{
 P <- PET::phantom()
-
-P_radon <- nfft_radon(P, 514,514, fn = "polar")
+image(P)
+P_radon <- nfft_radon(P, 514, 514, fn = "polar")
 image(P_radon)
-P_inv <- nfft_inv_radon((P_radon), N = 257,iter = 2, fn = "polar")
+P_inv <- nfft_inv_radon((P_radon), n = 257, iter = 2, fn = "polar")
 image(P_inv)
 }
